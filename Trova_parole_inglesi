@@ -1,0 +1,35 @@
+import json
+import pandas as pd
+import nltk
+from nltk.corpus import words
+from nltk.tokenize import word_tokenize
+sentences = []
+
+testo = ''.join(sentences)
+
+def trova_parole_inglesi(testo):
+    # Scarica il corpus delle parole inglesi
+    nltk.download('words')
+    parole_inglesi = set(words.words())
+
+    nltk.download('punkt')
+
+    # Tokenizza il testo
+    tokens = word_tokenize(testo)
+
+    # Confronta ogni token con il dizionario
+    parole_inglesi_trovate = [token for token in tokens if token.lower() in parole_inglesi]
+
+    return parole_inglesi_trovate
+
+f = open("LLM_DF.csv", "r")
+data = pd.read_csv(f, usecols=["comment"])
+data.to_json('corpus.json', orient='records')
+
+f = open('corpus.json', 'r')
+corpus = json.load(f)
+
+for i in corpus:
+    sentences.append(i['comment'])
+
+trova_parole_inglesi(testo)
