@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import scrolledtext
+from tkinter import scrolledtext, filedialog
+from tkinter.filedialog import asksaveasfile
 
 from langchain_ollama import ChatOllama
 from langchain_core.messages import AIMessage
@@ -33,6 +34,7 @@ prompt = ChatPromptTemplate.from_messages(
 chain = prompt | llm
 
 def chat():
+    global dictionary
     x = text_area.get("1.0", tk.END).strip().splitlines()       
     msg = []
     inp = []
@@ -43,9 +45,13 @@ def chat():
         dictionary = dict(zip(inp, msg))
         for comment, emotion in dictionary.items():
             result_area.insert(tk.END, f"Comment: {comment} -> Emotion: {emotion}\n")
-
-
-
+    
+def salva_json():
+    f = filedialog.asksaveasfile(initialfile = 'Data.json', defaultextension=".json",filetypes=[("JSON files","*.json")])
+    if f:
+        json.dump(dictionary, f, indent=4)
+        f.close()
+    
 root = tk.Tk()
 root.title("Emotion Analysis Tool")
 
@@ -57,6 +63,8 @@ text_area.pack(padx=10, pady=10)
 analyze_button = tk.Button(root, text="Analyze Comments", command=chat)
 analyze_button.pack(pady=5)
 
+save_button = tk.Button(root, text="Save json", command=salva_json)
+save_button.pack(pady=10)
 # Area di output per i risultati
 result_area = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=50, height=10)
 result_area.pack(padx=10, pady=10)
