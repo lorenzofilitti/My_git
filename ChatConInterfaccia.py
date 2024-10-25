@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import scrolledtext
-import Chat_2
 
 from langchain_ollama import ChatOllama
 from langchain_core.messages import AIMessage
